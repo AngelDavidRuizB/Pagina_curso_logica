@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio de Lógica</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="brand">🧠 Laboratorio</div>
+            <nav class="nav">
+                <button class="nav-btn active" data-target="variables">1. Variables</button>
+                <button class="nav-btn" data-target="condicionales">2. Condicionales</button>
+                <button class="nav-btn" data-target="for">3. Ciclo For</button>
+                <button class="nav-btn" data-target="while">4. Ciclo While</button>
+                <button class="nav-btn" data-target="anidados">5. Ciclos Anidados</button>
+                <button class="nav-btn" data-target="estructuras">6. Arrays</button>
+                <button class="nav-btn" data-target="funciones">7. Funciones</button>
+            </nav>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <h1>Espacios de Práctica Interactiva</h1>
+                <p class="hint">Escribe tu código JavaScript a la izquierda y ve el resultado animado a la derecha.</p>
+            </header>
+
+            <!-- SECCIÓN 1: VARIABLES -->
+            <section class="panel" id="variables" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 01</p>
+                        <h2>Variables</h2>
+                        <p class="hint">Las variables son como cajas con nombre donde guardamos datos.</p>
+                    </div>
+                    <button class="btn run-btn" data-run="variables">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-variables">Código JavaScript</label>
+                        <textarea id="code-variables" class="code" spellcheck="false">// 1. Declara tus variables
+let heroe = "Link";
+let vidas = 3;
+let tiene Espada = true;
+
+// 2. ¡Visualízalas!
+crearVariable("heroe", heroe);
+crearVariable("vidas", vidas);
+crearVariable("tieneEspada", tieneEspada);
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-variables">
+                        <div class="viz-title">Memoria del Programa</div>
+                        <div class="viz-area" data-visual="variables"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 2: CONDICIONALES -->
+            <section class="panel hidden" id="condicionales" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 02</p>
+                        <h2>Condicionales (if/else)</h2>
+                        <p class="hint">El código toma decisiones basadas en preguntas (verdadero o falso).</p>
+                    </div>
+                    <button class="btn run-btn" data-run="condicionales">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-condicionales">Código JavaScript</label>
+                        <textarea id="code-condicionales" class="code" spellcheck="false">let energia = 80;
+
+// Cambia el valor de energia para ver el otro camino
+if (energia > 50) {
+    animarCondicional(true, "energia > 50");
+} else {
+    animarCondicional(false, "energia > 50");
+}
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-condicionales">
+                        <div class="viz-title">Flujo de Decisión</div>
+                        <div class="viz-area" data-visual="condicionales"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 3: CICLO FOR -->
+            <section class="panel hidden" id="for" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 03</p>
+                        <h2>Ciclo For</h2>
+                        <p class="hint">Repite un bloque de código un número específico de veces.</p>
+                    </div>
+                    <button class="btn run-btn" data-run="for">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-for">Código JavaScript</label>
+                        <textarea id="code-for" class="code" spellcheck="false">// Vamos a contar hasta 5
+let total = 5;
+
+for (let i = 1; i <= total; i++) {
+    // Visualiza cada paso del ciclo
+    animarCicloFor(i, total);
+}
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-for">
+                        <div class="viz-title">Línea de Tiempo del Ciclo</div>
+                        <div class="viz-area" data-visual="for"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 4: CICLO WHILE -->
+            <section class="panel hidden" id="while" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 04</p>
+                        <h2>Ciclo While</h2>
+                        <p class="hint">Repite MIENTRAS una condición sea verdadera.</p>
+                    </div>
+                    <button class="btn run-btn" data-run="while">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-while">Código JavaScript</label>
+                        <textarea id="code-while" class="code" spellcheck="false">let combustible = 5;
+
+while (combustible > 0) {
+    // 1. Visualizamos que la condición es verdadera
+    animarCicloWhile(true, combustible);
+    
+    // 2. Reducimos el combustible
+    combustible = combustible - 1;
+}
+
+// Al final, la condición falla (combustible es 0)
+animarCicloWhile(false, 0);
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-while">
+                        <div class="viz-title">Verificación de Estado</div>
+                        <div class="viz-area" data-visual="while"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 5: CICLOS ANIDADOS -->
+            <section class="panel hidden" id="anidados" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 05</p>
+                        <h2>Ciclos Anidados</h2>
+                        <p class="hint">Un ciclo dentro de otro. Útil para recorrer grillas o matrices.</p>
+                    </div>
+                    <button class="btn run-btn" data-run="anidados">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-anidados">Código JavaScript</label>
+                        <textarea id="code-anidados" class="code" spellcheck="false">let filas = 4;
+let columnas = 4;
+
+// Ciclo externo (Filas)
+for (let f = 0; f < filas; f++) {
+    
+    // Ciclo interno (Columnas)
+    for (let c = 0; c < columnas; c++) {
+        animarAnidado(f, c, filas, columnas);
+    }
+    
+}
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-anidados">
+                        <div class="viz-title">Exploración de Matriz</div>
+                        <div class="viz-area" data-visual="anidados"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 6: ESTRUCTURAS DE DATOS -->
+            <section class="panel hidden" id="estructuras" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 06</p>
+                        <h2>Arrays (Arreglos)</h2>
+                        <p class="hint">Listas ordenadas de datos. Cada dato tiene un índice (posición).</p>
+                    </div>
+                    <button class="btn run-btn" data-run="estructuras">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-estructuras">Código JavaScript</label>
+                        <textarea id="code-estructuras" class="code" spellcheck="false">// Una lista de puntuaciones
+let puntuaciones = [100, 50, 75, 90, 25];
+
+// Visualiza el array completo
+animarArray(puntuaciones);
+
+// ¡Prueba cambiando los números!
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-estructuras">
+                        <div class="viz-title">Visualización de Memoria</div>
+                        <div class="viz-area" data-visual="estructuras"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 7: FUNCIONES -->
+            <section class="panel hidden" id="funciones" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 07</p>
+                        <h2>Funciones</h2>
+                        <p class="hint">Máquinas que reciben datos (entrada), hacen algo y devuelven un resultado (salida).</p>
+                    </div>
+                    <button class="btn run-btn" data-run="funciones">▶ Ejecutar</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-funciones">Código JavaScript</label>
+                        <textarea id="code-funciones" class="code" spellcheck="false">function duplicar(numero) {
+    return numero * 2;
+}
+
+function saludar(nombre) {
+    return "Hola " + nombre;
+}
+
+// Probamos las funciones
+let res1 = duplicar(5);
+animarFuncion("duplicar", [5], res1);
+
+let res2 = saludar("Ana");
+animarFuncion("saludar", ["Ana"], res2);
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-funciones">
+                        <div class="viz-title">Procesamiento de Datos</div>
+                        <div class="viz-area" data-visual="funciones"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
