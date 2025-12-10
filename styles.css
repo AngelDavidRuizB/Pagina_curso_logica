@@ -2,18 +2,18 @@
    Estilos base - opción A (simple, ligero)
    =============================== */
 :root {
-    --bg: #0f172a;
-    --panel: #1e293b;
-    --accent: #38bdf8;
-    --accent-2: #818cf8;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --code: #0f172a;
-    --border: #334155;
-    --success: #22c55e;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --bg: #ffffff;
+    --panel: #f8fafc;
+    --accent: #2563eb;
+    --accent-2: #1e40af;
+    --text: #0f172a;
+    --muted: #64748b;
+    --code: #1e293b;
+    --border: #e2e8f0;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --radius: 8px;
     --mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
     --sans: "Inter", system-ui, -apple-system, sans-serif;
@@ -54,6 +54,12 @@ body {
     gap: 8px;
 }
 
+.brand-logo {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
 .nav {
     display: flex;
     flex-direction: column;
@@ -73,14 +79,14 @@ body {
 }
 
 .nav-btn:hover {
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.05);
     color: var(--text);
 }
 
 .nav-btn.active {
-    background: rgba(56,189,248,0.1);
+    background: rgba(37, 99, 235, 0.1);
     color: var(--accent);
-    border-color: rgba(56,189,248,0.2);
+    border-color: rgba(37, 99, 235, 0.2);
     font-weight: 500;
 }
 
@@ -117,7 +123,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     justify-content: space-between;
     padding: 20px;
     border-bottom: 1px solid var(--border);
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.02);
 }
 
 .panel-body {
@@ -132,7 +138,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.01);
 }
 
 .editor label { color: var(--muted); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
@@ -156,7 +162,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 
 .visual {
     padding: 20px;
-    background: #18212f;
+    background: #f1f5f9;
     display: flex;
     flex-direction: column;
 }
@@ -203,7 +209,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 
 /* Variables: Cajas de memoria */
 .variable-box {
-    background: #334155;
+    background: #ffffff;
     border: 2px solid var(--accent);
     border-radius: 8px;
     padding: 0;
@@ -215,7 +221,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 
 .var-name {
     background: var(--accent);
-    color: #0f172a;
+    color: #ffffff;
     padding: 4px 8px;
     font-size: 0.8rem;
     font-weight: 700;
@@ -228,7 +234,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     text-align: center;
     font-family: var(--mono);
     font-size: 1.1rem;
-    color: white;
+    color: var(--text);
 }
 
 /* Condicionales: Diagrama de flujo */
@@ -243,32 +249,33 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 .flow-node {
     padding: 10px 20px;
     border-radius: 20px;
-    background: #475569;
-    border: 2px solid #64748b;
-    color: white;
+    background: #ffffff;
+    border: 2px solid var(--border);
+    color: var(--text);
     font-size: 0.9rem;
     position: relative;
     text-align: center;
 }
 
 .flow-diamond {
-    width: 100px;
-    height: 100px;
-    background: #475569;
-    border: 2px solid var(--warning);
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 2px solid #059669;
     transform: rotate(45deg);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px 0;
+    margin: 10px 0 20px;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.15);
 }
 
 .flow-diamond span {
     transform: rotate(-45deg);
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
-    width: 100%;
+    color: #065f46;
 }
 
 .flow-branch {
@@ -314,8 +321,8 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background: #334155;
-    border: 2px solid #475569;
+    background: #ffffff;
+    border: 2px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -327,17 +334,35 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 
 .loop-step.current {
     background: var(--accent);
-    color: #0f172a;
-    border-color: white;
+    color: #ffffff;
+    border-color: var(--accent);
     transform: scale(1.1);
     font-weight: bold;
+}
+
+/* Estilo para pasos que son condiciones (While) */
+.loop-step.condition-step {
+    border-radius: 0;
+    transform: rotate(45deg);
+    margin: 0 10px; /* Espacio extra por la rotación */
+    width: 36px;
+    height: 36px;
+}
+
+.loop-step.condition-step span {
+    transform: rotate(-45deg);
+    display: block;
+}
+
+.loop-step.condition-step.current {
+    transform: rotate(45deg) scale(1.1);
 }
 
 /* Ciclos anidados: Grid */
 .grid-container {
     display: grid;
     gap: 4px;
-    background: #334155;
+    background: #e2e8f0;
     padding: 8px;
     border-radius: 8px;
 }
@@ -345,8 +370,8 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 .grid-cell {
     width: 40px;
     height: 40px;
-    background: #1e293b;
-    border: 1px solid #475569;
+    background: #ffffff;
+    border: 1px solid var(--border);
     border-radius: 4px;
     display: flex;
     align-items: center;
@@ -358,16 +383,16 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 
 .grid-cell.active {
     background: var(--accent);
-    color: #0f172a;
+    color: #ffffff;
     font-weight: bold;
-    box-shadow: 0 0 10px rgba(56,189,248,0.5);
+    box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
 }
 
 /* Arrays: Casilleros */
 .array-container {
     display: flex;
     gap: 2px;
-    background: #334155;
+    background: #e2e8f0;
     padding: 10px;
     border-radius: 8px;
     overflow-x: auto;
@@ -383,14 +408,14 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 .array-val {
     width: 50px;
     height: 50px;
-    background: #1e293b;
+    background: #ffffff;
     border: 2px solid var(--accent);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-size: 1.1rem;
-    color: white;
+    color: var(--text);
 }
 
 .array-idx {
@@ -405,7 +430,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     display: flex;
     align-items: center;
     gap: 10px;
-    background: #334155;
+    background: #e2e8f0;
     padding: 15px;
     border-radius: 8px;
     width: 100%;
@@ -413,12 +438,13 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 }
 
 .func-in, .func-out {
-    background: #1e293b;
+    background: #ffffff;
     padding: 8px 12px;
     border-radius: 4px;
     font-family: var(--mono);
     font-size: 0.9rem;
-    border: 1px solid #475569;
+    border: 1px solid var(--border);
+    color: var(--text);
 }
 
 .func-process {
@@ -429,7 +455,7 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #0f172a;
+    color: #ffffff;
     font-weight: bold;
     position: relative;
 }
@@ -437,6 +463,273 @@ h2 { margin: 0 0 4px; font-size: 1.4rem; letter-spacing: -0.01em; }
 .func-process::after {
     content: "⚙️";
     animation: spin 2s linear infinite;
+}
+
+/* Diagrama de Flujo Generado */
+.guide-box {
+    background: #e0f2fe;
+    border: 1px solid #bae6fd;
+    padding: 10px;
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    color: #0369a1;
+}
+
+.guide-box ul {
+    margin: 5px 0 0 20px;
+    padding: 0;
+}
+
+.placeholder-text {
+    color: var(--muted);
+    font-style: italic;
+}
+
+.flowchart-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    padding: 40px 20px;
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    min-height: 400px;
+}
+
+/* ========================================
+   FORMAS ESTÁNDAR ISO 5807
+   ======================================== */
+
+/* Base común para todos los nodos */
+.fc-node {
+    padding: 12px 24px;
+    background: white;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: var(--mono);
+    text-align: center;
+    position: relative;
+    min-width: 140px;
+    max-width: 220px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    animation: nodeAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+    z-index: 1;
+}
+
+@keyframes nodeAppear {
+    from { opacity: 0; transform: translateY(-10px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* TERMINAL (Inicio/Fin): Óvalo/Cápsula */
+.fc-start-end {
+    border-radius: 50px; /* Óvalo perfecto */
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    border: 3px solid #1e40af;
+    font-weight: 700;
+    font-family: var(--sans);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    padding: 14px 32px;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+}
+
+/* PROCESO: Rectángulo */
+.fc-process {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #64748b;
+    border-radius: 0; /* Rectángulo puro, sin bordes redondeados */
+}
+
+/* ENTRADA/SALIDA: Paralelogramo */
+.fc-io {
+    background: linear-gradient(135deg, #fef9c3 0%, #fef08a 100%);
+    border: 2px solid #ca8a04;
+    border-radius: 0;
+    padding: 12px 30px;
+    clip-path: polygon(15% 0%, 100% 0%, 85% 100%, 0% 100%); /* Paralelogramo real */
+    min-width: 180px;
+}
+
+.fc-io span {
+    display: block;
+    text-align: center;
+}
+
+/* DECISIÓN: Rombo */
+.fc-decision-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    position: relative;
+}
+
+.fc-condition-label {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--mono);
+    margin-bottom: 8px;
+    border: 1px solid #cbd5e1;
+    max-width: 180px;
+    text-align: center;
+    word-break: break-word;
+}
+
+.fc-decision {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+    border: 2px solid #059669;
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);
+    animation: nodeAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    opacity: 0;
+}
+
+.fc-decision span {
+    transform: rotate(-45deg);
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-align: center;
+    color: #065f46;
+    font-family: var(--mono);
+    max-width: 50px;
+    line-height: 1.1;
+}
+
+.fc-decision.fc-loop {
+    background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
+    border-color: #7c3aed;
+}
+
+.fc-decision.fc-loop span {
+    color: #5b21b6;
+}
+
+.fc-branches {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 80px;
+    position: relative;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* Líneas de conexión desde el rombo */
+.fc-branches::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    height: 40px;
+    border-left: 2px solid #64748b;
+    border-right: 2px solid #64748b;
+    border-top: 2px solid #64748b;
+    border-radius: 8px 8px 0 0;
+}
+
+.fc-branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    gap: 6px;
+    padding-top: 25px;
+}
+
+/* Flecha vertical entrando a cada rama */
+.fc-branch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 20px;
+    background: #64748b;
+}
+
+.fc-branch::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #64748b;
+}
+
+.fc-branch-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.fc-branch-label.true {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.fc-branch-label.false {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.fc-branch .fc-node {
+    min-width: 120px;
+    font-size: 0.75rem;
+    padding: 10px 16px;
+}
+
+/* ========================================
+   FLECHAS CONECTORAS
+   ======================================== */
+.fc-arrow {
+    width: 2px;
+    height: 30px;
+    background: #64748b;
+    margin: 0 auto;
+    position: relative;
+}
+
+.fc-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #64748b;
+}
+
+/* Flecha de salida del rombo (hacia abajo desde las esquinas laterales) */
+.fc-decision-wrapper .fc-arrow {
+    display: none; /* Se maneja con ::before de branches */
 }
 
 /* Animaciones generales */

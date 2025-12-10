@@ -1,0 +1,144 @@
+
+/* =========================================
+   ESTILOS PARA TARJETAS INTERACTIVAS (SECCIÓN 8)
+   ========================================= */
+
+.diagram-explanation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding-bottom: 20px;
+}
+
+.interactive-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.interactive-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px -10px rgba(37, 99, 235, 0.15);
+    border-color: var(--accent);
+}
+
+.card-visual {
+    background: #f8fafc;
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+}
+
+.interactive-card:hover .card-visual {
+    background: #eff6ff;
+}
+
+/* Animaciones de las figuras al hacer hover en la tarjeta */
+.interactive-card .fc-start-end,
+.interactive-card .fc-process,
+.interactive-card .fc-io,
+.interactive-card .fc-decision {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.interactive-card:hover .fc-start-end {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.5);
+}
+
+.interactive-card:hover .fc-process {
+    transform: scale(1.05);
+    border-color: var(--accent);
+    background: white;
+}
+
+.interactive-card:hover .fc-io {
+    transform: scale(1.1);
+    background: #fef08a;
+}
+
+.interactive-card:hover .fc-decision {
+    transform: rotate(45deg) scale(1.15);
+    background: #d1fae5;
+    border-color: #059669;
+}
+
+.card-content {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+    width: fit-content;
+}
+
+.badge-blue { background: #dbeafe; color: #1e40af; }
+.badge-gray { background: #f1f5f9; color: #475569; }
+.badge-yellow { background: #fef9c3; color: #854d0e; }
+.badge-green { background: #d1fae5; color: #065f46; }
+
+.card-content h3 {
+    color: var(--foreground);
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+}
+
+.card-content .definition {
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.card-content .details {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #475569;
+    flex-grow: 1;
+}
+
+.code-preview {
+    background: var(--code);
+    color: #e2e8f0;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    margin-top: auto;
+    border-left: 4px solid var(--accent);
+    position: relative;
+}
+
+.code-preview::before {
+    content: "JS";
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: bold;
+}

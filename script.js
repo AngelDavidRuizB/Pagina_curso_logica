@@ -35,7 +35,8 @@ const visuals = {
     while: document.querySelector('[data-visual="while"]'),
     anidados: document.querySelector('[data-visual="anidados"]'),
     estructuras: document.querySelector('[data-visual="estructuras"]'),
-    funciones: document.querySelector('[data-visual="funciones"]')
+    funciones: document.querySelector('[data-visual="funciones"]'),
+    diagrama: document.querySelector('[data-visual="diagrama"]')
 };
 
 // --- Funciones de Animación Didáctica ---
@@ -57,10 +58,10 @@ window.crearVariable = function(nombre, valor) {
     // Si es string, poner comillas visuales
     if (typeof valor === 'string') {
         valEl.textContent = `"${valor}"`;
-        valEl.style.color = '#a5f3fc'; // Cyan claro para strings
+        valEl.style.color = '#4013e3ff'; // Cyan claro para strings
     } else {
         valEl.textContent = valor;
-        valEl.style.color = '#fcd34d'; // Amarillo para números
+        valEl.style.color = '#e8690eff'; // Amarillo para números
     }
     
     card.appendChild(nameEl);
@@ -79,9 +80,15 @@ window.animarCondicional = function(condicion, textoCondicion) {
     container.innerHTML = `
         <div class="flow-node">Inicio</div>
         <div style="height: 20px; border-left: 2px solid #64748b;"></div>
+        
+        <!-- Etiqueta de la condición (fuera del rombo) -->
+        <div class="fc-condition-label" style="margin-bottom: 0;">${textoCondicion || 'Condición'}</div>
+        
+        <!-- Rombo de decisión -->
         <div class="flow-diamond">
-            <span>${textoCondicion || '?'}</span>
+            <span>?</span>
         </div>
+        
         <div class="flow-branch">
             <div class="branch-path ${condicion ? 'active' : ''}">
                 <span class="branch-label">VERDADERO</span>
@@ -135,14 +142,14 @@ window.animarCicloWhile = function(condicion, i) {
     }
     
     const step = document.createElement('div');
-    step.className = 'loop-step';
+    step.className = 'loop-step condition-step'; // Añadimos clase para estilo rombo
     
     if (condicion) {
         step.classList.add('current');
-        step.textContent = i;
+        step.innerHTML = `<span>${i}</span>`; // Span necesario para contrarrestar rotación
         step.style.borderColor = 'var(--success)';
     } else {
-        step.textContent = '🛑';
+        step.innerHTML = `<span>🛑</span>`;
         step.style.borderColor = 'var(--danger)';
         step.style.background = 'rgba(239, 68, 68, 0.2)';
     }
@@ -185,7 +192,7 @@ window.animarAnidado = function(fila, col, totalFilas, totalCols) {
         cell.classList.add('active');
         // Dejar rastro
         cell.style.borderColor = 'var(--accent)';
-        cell.style.color = 'white';
+        cell.style.color = 'black';
     }
 };
 
@@ -242,6 +249,207 @@ window.animarFuncion = function(nombre, entradas, salida) {
     area.appendChild(machine);
 };
 
+// Helper para errores
+function mostrarError(area, err) {
+    const errorBox = document.createElement('div');
+    errorBox.style.color = '#ef4444';
+    errorBox.style.background = 'rgba(239,68,68,0.1)';
+    errorBox.style.padding = '10px';
+    errorBox.style.borderRadius = '4px';
+    errorBox.style.border = '1px solid #ef4444';
+    errorBox.innerHTML = `<strong>Error:</strong> ${err.message}`;
+    area.appendChild(errorBox);
+}
+
+// 8. Generador de Diagramas (Parser Simplificado)
+function generarDiagrama(code, area) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'flowchart-wrapper';
+    
+    // Contador para animaciones escalonadas
+    let nodeIndex = 0;
+    const getDelay = () => (nodeIndex++ * 0.1) + 's';
+    
+    // Nodo Inicio (Terminal)
+    addNode(wrapper, 'INICIO', 'start-end', getDelay());
+    addArrow(wrapper);
+
+    // Limpiar comentarios y líneas vacías
+    const lines = code.split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('//'));
+
+    let i = 0;
+    while (i < lines.length) {
+        const line = lines[i];
+
+        if (line.startsWith('let ') || line.startsWith('const ') || line.startsWith('var ') || line.includes(' = ')) {
+            // Asignación
+            const varMatch = line.match(/(let|const|var)\s+(\w+)\s*=\s*(.+);?/);
+            let displayText = line.replace(';', '');
+            if (varMatch) {
+                displayText = `${varMatch[2]} ← ${varMatch[3].replace(';', '')}`;
+            }
+            addNode(wrapper, displayText, 'process', getDelay());
+            addArrow(wrapper);
+            i++;
+        } else if (line.startsWith('console.log') || line.startsWith('alert')) {
+            // Entrada/Salida
+            let content = line;
+            if (line.includes('(')) content = line.substring(line.indexOf('(') + 1, line.lastIndexOf(')'));
+            addNode(wrapper, content, 'io', getDelay());
+            addArrow(wrapper);
+            i++;
+        } else if (line.startsWith('if')) {
+            // Condicional
+            let condition = 'Condición';
+            if (line.includes('(')) condition = line.substring(line.indexOf('(') + 1, line.lastIndexOf(')'));
+            
+            const decisionWrapper = document.createElement('div');
+            decisionWrapper.className = 'fc-decision-wrapper';
+            
+            // Etiqueta de condición
+            const label = document.createElement('div');
+            label.className = 'fc-condition-label';
+            label.textContent = condition;
+            decisionWrapper.appendChild(label);
+            
+            const decision = document.createElement('div');
+            decision.className = 'fc-decision';
+            decision.style.animationDelay = getDelay();
+            decision.innerHTML = `<span>?</span>`;
+            decision.title = condition;
+            decisionWrapper.appendChild(decision);
+
+            const branches = document.createElement('div');
+            branches.className = 'fc-branches';
+            
+            // Rama True
+            const trueBranch = document.createElement('div');
+            trueBranch.className = 'fc-branch';
+            const trueLabelEl = document.createElement('div');
+            trueLabelEl.className = 'fc-branch-label true';
+            trueLabelEl.innerHTML = '✓ SÍ';
+            trueBranch.appendChild(trueLabelEl);
+            const trueNode = document.createElement('div');
+            trueNode.className = 'fc-node fc-process';
+            trueNode.style.animationDelay = getDelay();
+            trueNode.textContent = 'Ejecutar bloque IF';
+            trueBranch.appendChild(trueNode);
+            
+            // Rama False
+            const falseBranch = document.createElement('div');
+            falseBranch.className = 'fc-branch';
+            const falseLabelEl = document.createElement('div');
+            falseLabelEl.className = 'fc-branch-label false';
+            falseLabelEl.innerHTML = '✗ NO';
+            falseBranch.appendChild(falseLabelEl);
+            const falseNode = document.createElement('div');
+            falseNode.className = 'fc-node fc-process';
+            falseNode.style.animationDelay = getDelay();
+            falseNode.textContent = 'Ejecutar bloque ELSE';
+            falseBranch.appendChild(falseNode);
+            
+            branches.appendChild(trueBranch);
+            branches.appendChild(falseBranch);
+            
+            decisionWrapper.appendChild(branches);
+            wrapper.appendChild(decisionWrapper);
+            
+            addArrow(wrapper);
+            
+            // Avanzar simplificadamente hasta cerrar llaves
+            let openBraces = 0;
+            if (line.includes('{')) openBraces++;
+            i++;
+            while(i < lines.length && (openBraces > 0 || lines[i].includes('else'))) {
+                if (lines[i].includes('{')) openBraces++;
+                if (lines[i].includes('}')) openBraces--;
+                i++;
+            }
+        } else if (line.startsWith('while') || line.startsWith('for')) {
+             let condition = 'Ciclo';
+             if (line.includes('(')) condition = line.substring(line.indexOf('(') + 1, line.lastIndexOf(')'));
+             
+             // Wrapper para decisión (Ciclo)
+             const decisionWrapper = document.createElement('div');
+             decisionWrapper.className = 'fc-decision-wrapper';
+
+             const label = document.createElement('div');
+             label.className = 'fc-condition-label';
+             label.textContent = condition;
+             decisionWrapper.appendChild(label);
+
+             const decision = document.createElement('div');
+             decision.className = 'fc-decision fc-loop';
+             decision.style.animationDelay = getDelay();
+             decision.innerHTML = `<span>WHILE</span>`;
+             decisionWrapper.appendChild(decision);
+             
+             wrapper.appendChild(decisionWrapper);
+
+             addArrow(wrapper);
+             addNode(wrapper, 'Cuerpo del ciclo', 'process', getDelay());
+             addArrow(wrapper);
+             
+             let openBraces = 0;
+             if (line.includes('{')) openBraces++;
+             i++;
+             while(i < lines.length && openBraces > 0) {
+                 if (lines[i].includes('{')) openBraces++;
+                 if (lines[i].includes('}')) openBraces--;
+                 i++;
+             }
+        } else {
+            // Genérico
+            if (!line.includes('}') && line.length > 1) {
+                addNode(wrapper, line.replace(';', ''), 'process', getDelay());
+                addArrow(wrapper);
+            }
+            i++;
+        }
+    }
+
+    // Nodo Fin
+    // Remover última flecha si existe
+    if (wrapper.lastChild && wrapper.lastChild.className === 'fc-arrow') {
+        wrapper.removeChild(wrapper.lastChild);
+    }
+    addArrow(wrapper);
+    addNode(wrapper, 'FIN', 'start-end', getDelay());
+    area.appendChild(wrapper);
+}
+
+function addNode(parent, text, type, delay = '0s') {
+    if (type === 'decision') {
+         const d = document.createElement('div');
+         d.className = 'fc-decision';
+         d.style.animationDelay = delay;
+         d.innerHTML = `<span>${text}</span>`;
+         parent.appendChild(d);
+         return;
+    }
+    
+    const node = document.createElement('div');
+    node.className = `fc-node fc-${type}`;
+    node.style.animationDelay = delay;
+    
+    if (type === 'io') {
+        const span = document.createElement('span');
+        span.textContent = text;
+        node.appendChild(span);
+    } else {
+        node.textContent = text;
+    }
+    parent.appendChild(node);
+}
+
+function addArrow(parent) {
+    const arrow = document.createElement('div');
+    arrow.className = 'fc-arrow';
+    parent.appendChild(arrow);
+}
+
 
 // --- Motor de Ejecución ---
 function runCode(sectionKey) {
@@ -251,6 +459,16 @@ function runCode(sectionKey) {
     
     // 1. Limpiar área visual antes de ejecutar
     area.innerHTML = '';
+
+    // Caso especial para el generador de diagramas
+    if (sectionKey === 'diagrama') {
+        try {
+            generarDiagrama(code, area);
+        } catch (err) {
+            mostrarError(area, err);
+        }
+        return;
+    }
     
     try {
         // 2. Ejecutar código del estudiante

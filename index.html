@@ -5,30 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laboratorio de Lógica</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles-interactive.css">
 </head>
 <body>
     <div class="layout">
         <aside class="sidebar">
-            <div class="brand">🧠 Laboratorio</div>
+            <div class="brand">
+                <img src="logo.jpeg" alt="UIFCE Logo" class="brand-logo">
+            </div>
             <nav class="nav">
-                <button class="nav-btn active" data-target="variables">1. Variables</button>
+                <button class="nav-btn active" data-target="inicio">Inicio</button>
+                <button class="nav-btn" data-target="variables">1. Variables</button>
                 <button class="nav-btn" data-target="condicionales">2. Condicionales</button>
                 <button class="nav-btn" data-target="for">3. Ciclo For</button>
                 <button class="nav-btn" data-target="while">4. Ciclo While</button>
                 <button class="nav-btn" data-target="anidados">5. Ciclos Anidados</button>
                 <button class="nav-btn" data-target="estructuras">6. Arrays</button>
                 <button class="nav-btn" data-target="funciones">7. Funciones</button>
+                <button class="nav-btn" data-target="explicacion-diagramas">8. Explicación Diagramas</button>
+                <button class="nav-btn" data-target="diagrama">9. Generar diagrama</button>
             </nav>
         </aside>
 
         <main class="main">
             <header class="topbar">
-                <h1>Espacios de Práctica Interactiva</h1>
+                <h1>Introducción a la lógica de programación</h1>
                 <p class="hint">Escribe tu código JavaScript a la izquierda y ve el resultado animado a la derecha.</p>
             </header>
 
+            <!-- SECCIÓN 0: INICIO -->
+            <section class="panel" id="inicio" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Bienvenida</p>
+                        <h2>Inicio</h2>
+                        <p class="hint">Tu punto de partida en el mundo de la programación.</p>
+                    </div>
+                </div>
+                <div class="panel-body" style="display: block; padding: 30px;">
+                    <div style="max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                        <h3 style="color: var(--accent); margin-top: 0;">Objetivo del Laboratorio</h3>
+                        <p style="margin-bottom: 20px;">Este laboratorio interactivo está diseñado para ayudarte a comprender los fundamentos de la lógica de programación de una manera visual y práctica. Aquí no solo escribirás código, sino que verás cómo funciona por dentro.</p>
+                        
+                        <h3 style="color: var(--accent);">¿Qué encontrarás aquí?</h3>
+                        <ul style="margin-bottom: 20px; padding-left: 20px;">
+                            <li style="margin-bottom: 8px;"><strong>Variables:</strong> Aprende cómo se guardan los datos en la memoria.</li>
+                            <li style="margin-bottom: 8px;"><strong>Condicionales:</strong> Entiende cómo los programas toman decisiones.</li>
+                            <li style="margin-bottom: 8px;"><strong>Ciclos:</strong> Domina la repetición de tareas con For y While.</li>
+                            <li style="margin-bottom: 8px;"><strong>Estructuras de Datos:</strong> Organiza información compleja con Arrays.</li>
+                            <li style="margin-bottom: 8px;"><strong>Funciones:</strong> Crea bloques de código reutilizables.</li>
+                            <li style="margin-bottom: 8px;"><strong>Diagramas de Flujo:</strong> Diseña y visualiza la lógica de tus algoritmos gráficamente.</li>
+                        </ul>
+
+                        <h3 style="color: var(--accent);">¿Qué puedes hacer?</h3>
+                        <p>En cada sección encontrarás un editor de código donde podrás escribir JavaScript real. Al ejecutarlo, verás animaciones que representan lo que ocurre en la memoria de la computadora o en el flujo del programa.</p>
+                    </div>
+                </div>
+            </section>
+
             <!-- SECCIÓN 1: VARIABLES -->
-            <section class="panel" id="variables" data-section>
+            <section class="panel hidden" id="variables" data-section>
                 <div class="panel-header">
                     <div>
                         <p class="eyebrow">Concepto 01</p>
@@ -246,6 +282,152 @@ animarFuncion("saludar", ["Ana"], res2);
                     <div class="visual" id="visual-funciones">
                         <div class="viz-title">Procesamiento de Datos</div>
                         <div class="viz-area" data-visual="funciones"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 8: EXPLICACIÓN DIAGRAMAS -->
+            <section class="panel hidden" id="explicacion-diagramas" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Concepto 08</p>
+                        <h2>Partes de un Diagrama de Flujo</h2>
+                        <p class="hint">Aprende qué significa cada figura y cómo se traduce a código.</p>
+                    </div>
+                </div>
+                <div class="panel-body" style="display: block; padding: 30px; overflow-y: auto;">
+                    
+                    <div class="intro-text" style="max-width: 800px; margin: 0 auto 40px; text-align: center; background: #f0f9ff; padding: 20px; border-radius: 10px; border: 1px solid #bae6fd;">
+                        <h3 style="color: #0369a1; margin-top: 0;">¿Qué es un Diagrama de Flujo?</h3>
+                        <p style="color: #0c4a6e; margin-bottom: 0;">Es un lenguaje visual universal (Estándar ISO 5807) que permite representar algoritmos de forma gráfica. Antes de escribir una sola línea de código, los programadores usan estos diagramas para planear la lógica. <strong>¡Pasa el mouse sobre las tarjetas para verlas cobrar vida!</strong></p>
+                    </div>
+
+                    <div class="diagram-explanation-grid">
+                        
+                        <!-- Inicio / Fin -->
+                        <div class="interactive-card">
+                            <div class="card-visual">
+                                <div class="fc-start-end">INICIO</div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge badge-blue">Terminal</span>
+                                <h3>Inicio / Fin</h3>
+                                <p class="definition">Marca los límites absolutos de tu algoritmo.</p>
+                                <div class="details">
+                                    <p>Todo programa necesita saber dónde empezar y dónde terminar. En un diagrama, esta figura es única para el inicio, pero puede haber varios finales.</p>
+                                </div>
+                                <div class="code-preview">
+                                    // No tiene código directo,<br>
+                                    // representa el archivo entero.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Proceso -->
+                        <div class="interactive-card">
+                            <div class="card-visual">
+                                <div class="fc-process" style="padding: 15px 30px;">x = x + 1</div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge badge-gray">Proceso</span>
+                                <h3>Acción / Cálculo</h3>
+                                <p class="definition">Representa una operación interna de la computadora.</p>
+                                <div class="details">
+                                    <p>Aquí ocurren las matemáticas y las asignaciones. Es el "trabajo" real del programa, donde los datos se transforman.</p>
+                                </div>
+                                <div class="code-preview">
+                                    let vidas = 3;<br>
+                                    puntos = puntos + 100;
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Entrada / Salida -->
+                        <div class="interactive-card">
+                            <div class="card-visual">
+                                <div class="fc-io"><span>Leer Nombre</span></div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge badge-yellow">E / S</span>
+                                <h3>Entrada / Salida</h3>
+                                <p class="definition">Comunicación con el mundo exterior.</p>
+                                <div class="details">
+                                    <p><strong>Entrada:</strong> El usuario escribe algo (Teclado).<br><strong>Salida:</strong> El programa muestra algo (Pantalla).</p>
+                                </div>
+                                <div class="code-preview">
+                                    // Entrada<br>
+                                    let nombre = prompt();<br>
+                                    // Salida<br>
+                                    console.log(nombre);
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Decisión -->
+                        <div class="interactive-card">
+                            <div class="card-visual">
+                                <div class="fc-decision"><span>?</span></div>
+                            </div>
+                            <div class="card-content">
+                                <span class="card-badge badge-green">Decisión</span>
+                                <h3>Condicional</h3>
+                                <p class="definition">El cerebro del algoritmo que toma decisiones.</p>
+                                <div class="details">
+                                    <p>Evalúa una pregunta de Sí o No. Dependiendo de la respuesta, el flujo toma un camino diferente (bifurcación).</p>
+                                </div>
+                                <div class="code-preview">
+                                    if (edad >= 18) {<br>
+                                    &nbsp;&nbsp;// Camino Sí<br>
+                                    } else {<br>
+                                    &nbsp;&nbsp;// Camino No<br>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECCIÓN 9: GENERAR DIAGRAMA -->
+            <section class="panel hidden" id="diagrama" data-section>
+                <div class="panel-header">
+                    <div>
+                        <p class="eyebrow">Herramienta Interactiva</p>
+                        <h2>Generar diagrama</h2>
+                        <p class="hint">Escribe tu código y verás cómo se transforma mágicamente en un diagrama visual.</p>
+                    </div>
+                    <button class="btn run-btn" data-run="diagrama">▶ Generar Diagrama</button>
+                </div>
+                <div class="panel-body">
+                    <div class="editor">
+                        <label for="code-diagrama">Tu Código JavaScript</label>
+                        <div class="guide-box">
+                            <strong>Guía rápida:</strong>
+                            <ul>
+                                <li>Usa <code>let</code> o <code>const</code> para declarar variables.</li>
+                                <li>Usa <code>if (condicion) { ... } else { ... }</code> para decisiones.</li>
+                                <li>Usa <code>while (condicion) { ... }</code> para ciclos.</li>
+                                <li>Usa <code>console.log(...)</code> para salidas.</li>
+                            </ul>
+                        </div>
+                        <textarea id="code-diagrama" class="code" spellcheck="false" style="height: 200px;">// Ejemplo:
+let edad = 18;
+
+if (edad >= 18) {
+    console.log("Es mayor de edad");
+} else {
+    console.log("Es menor de edad");
+}
+
+console.log("Fin del programa");
+</textarea>
+                    </div>
+                    <div class="visual" id="visual-diagrama">
+                        <div class="viz-title">Diagrama Generado</div>
+                        <div class="viz-area" data-visual="diagrama" style="justify-content: center; align-items: center; display: flex;">
+                            <p class="placeholder-text">Ejecuta el código para ver el diagrama</p>
+                        </div>
                     </div>
                 </div>
             </section>
