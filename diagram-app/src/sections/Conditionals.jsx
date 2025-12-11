@@ -174,52 +174,66 @@ const Conditionals = () => {
                 <p>Ejecuta el código para ver la decisión</p>
               </div>
             ) : (
-              <div className="flex flex-col items-center animate-in fade-in zoom-in duration-500">
+              <div className="flex flex-col items-center animate-in fade-in zoom-in duration-500 w-full max-w-lg">
+                
                 {/* Start Node */}
-                <div className="px-4 py-2 bg-slate-700 rounded-full text-slate-300 text-sm font-mono mb-2 border border-slate-600">
+                <div className="px-4 py-2 bg-slate-700 rounded-full text-slate-300 text-sm font-mono mb-2 border border-slate-600 z-10">
                   Inicio
                 </div>
                 
-                {/* Connector */}
+                {/* Vertical Line */}
                 <div className="h-8 w-0.5 bg-slate-600"></div>
 
                 {/* Condition Label */}
-                <div className="text-xs text-slate-400 mb-1 font-mono bg-secondary px-2 py-0.5 rounded border border-slate-800">
+                <div className="text-xs text-slate-400 mb-1 font-mono bg-secondary px-2 py-0.5 rounded border border-slate-800 z-10">
                   {conditionText}
                 </div>
 
-                {/* Decision Diamond */}
-                <div className="w-24 h-24 bg-yellow-500/10 border-2 border-yellow-500/50 rotate-45 flex items-center justify-center mb-8 relative z-10">
-                  <span className="-rotate-45 text-yellow-500 font-bold text-xl">?</span>
-                </div>
+                {/* Flowchart Container */}
+                <div className="relative w-full mt-2">
+                    {/* SVG Connections */}
+                    <svg className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+                            </marker>
+                        </defs>
+                        
+                        {/* Path to True (Left) */}
+                        <line x1="50%" y1="48" x2="20%" y2="48" stroke="#475569" strokeWidth="2" />
+                        <line x1="20%" y1="48" x2="20%" y2="100" stroke="#475569" strokeWidth="2" markerEnd="url(#arrowhead)" />
+                        
+                        {/* Path to False (Right) */}
+                        <line x1="50%" y1="48" x2="80%" y2="48" stroke="#475569" strokeWidth="2" />
+                        <line x1="80%" y1="48" x2="80%" y2="100" stroke="#475569" strokeWidth="2" markerEnd="url(#arrowhead)" />
+                    </svg>
 
-                {/* Branches Container */}
-                <div className="flex gap-16 relative -mt-8 pt-8">
-                  {/* True Branch */}
-                  <div className={`flex flex-col items-center transition-opacity duration-500 ${executionStep === 'true' ? 'opacity-100' : 'opacity-30 grayscale'}`}>
-                    {/* Line from Diamond */}
-                    <div className="absolute top-0 left-1/2 w-[calc(50%+2px)] h-0.5 bg-slate-600 -translate-x-full origin-right -translate-y-[2px]" style={{ transform: 'translateX(-50%) rotate(0deg)' }}></div>
-                    <div className="absolute top-0 left-[calc(50%-4rem)] w-0.5 h-8 bg-slate-600"></div>
-                    
-                    <span className="text-xs font-bold text-green-400 mb-2 mt-8">VERDADERO</span>
-                    <div className="h-8 w-0.5 border-l-2 border-dashed border-green-500/50"></div>
-                    <div className="px-4 py-3 bg-green-900/20 border border-green-500/50 rounded text-green-300 text-sm font-mono shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-                      Ejecutar Bloque IF
+                    {/* Content Layer */}
+                    <div className="relative z-10 flex flex-col items-center">
+                        {/* Diamond */}
+                        <div className="w-24 h-24 bg-[#1e1e1e] border-2 border-yellow-500/50 rotate-45 flex items-center justify-center mb-16 shadow-lg">
+                            <span className="-rotate-45 text-yellow-500 font-bold text-xl">?</span>
+                        </div>
+                        
+                        {/* Branches */}
+                        <div className="flex justify-between w-full px-4">
+                            {/* True Branch */}
+                            <div className={`flex flex-col items-center w-1/3 transition-opacity duration-500 ${executionStep === 'true' ? 'opacity-100' : 'opacity-30 grayscale'}`}>
+                                <span className="text-xs font-bold text-green-400 mb-2 bg-[#1e1e1e] px-2 py-1 rounded border border-green-500/30 z-10">VERDADERO</span>
+                                <div className="px-4 py-3 bg-green-900/20 border border-green-500/50 rounded text-green-300 text-sm font-mono shadow-[0_0_15px_rgba(34,197,94,0.2)] w-full text-center">
+                                    Ejecutar Bloque IF
+                                </div>
+                            </div>
+                            
+                            {/* False Branch */}
+                            <div className={`flex flex-col items-center w-1/3 transition-opacity duration-500 ${executionStep === 'false' ? 'opacity-100' : 'opacity-30 grayscale'}`}>
+                                <span className="text-xs font-bold text-red-400 mb-2 bg-[#1e1e1e] px-2 py-1 rounded border border-red-500/30 z-10">FALSO</span>
+                                <div className="px-4 py-3 bg-red-900/20 border border-red-500/50 rounded text-red-300 text-sm font-mono shadow-[0_0_15px_rgba(239,68,68,0.2)] w-full text-center">
+                                    Ejecutar Bloque ELSE
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
-
-                  {/* False Branch */}
-                  <div className={`flex flex-col items-center transition-opacity duration-500 ${executionStep === 'false' ? 'opacity-100' : 'opacity-30 grayscale'}`}>
-                    {/* Line from Diamond */}
-                    <div className="absolute top-0 right-1/2 w-[calc(50%+2px)] h-0.5 bg-slate-600 translate-x-full origin-left -translate-y-[2px]" style={{ transform: 'translateX(50%) rotate(0deg)' }}></div>
-                    <div className="absolute top-0 right-[calc(50%-4rem)] w-0.5 h-8 bg-slate-600"></div>
-
-                    <span className="text-xs font-bold text-red-400 mb-2 mt-8">FALSO</span>
-                    <div className="h-8 w-0.5 border-l-2 border-dashed border-red-500/50"></div>
-                    <div className="px-4 py-3 bg-red-900/20 border border-red-500/50 rounded text-red-300 text-sm font-mono shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                      Ejecutar Bloque ELSE
-                    </div>
-                  </div>
                 </div>
               </div>
             )}
