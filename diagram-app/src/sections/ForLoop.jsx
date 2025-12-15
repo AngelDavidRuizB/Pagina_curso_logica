@@ -3,7 +3,9 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { Play, RotateCcw, Repeat } from 'lucide-react';
+import { Repeat } from 'lucide-react';
+import { useExecutionEngine } from '../hooks/useExecutionEngine';
+import { ExecutionControls, Feedback } from '../components/ExecutionControls';
 
 const defaultCode = `// 3. Ciclo For
 // Repite una acción un número determinado de veces
@@ -15,42 +17,51 @@ for (let i = 0; i < 5; i++) {
 }`;
 
 const ForLoop = () => {
-  const [code, setCode] = useState(defaultCode);
   const [steps, setSteps] = useState([]);
-  const [error, setError] = useState(null);
+
+  const validationFn = (state) => {
+      if (state.iterations && state.iterations > 0) {
+          return { success: true, message: `¡Excelente! Has ejecutado el ciclo ${state.iterations} veces.` };
+      }
+      return { success: false, message: "Intenta ejecutar el ciclo al menos una vez." };
+  };
+
+  const { 
+    code, 
+    setCode, 
+    runCode, 
+    reset, 
+    nextStep, 
+    isDebugMode, 
+    setIsDebugMode, 
+    isPlaying, 
+    currentStepIndex, 
+    totalSteps,
+    error, 
+    feedback 
+  } = useExecutionEngine(defaultCode, validationFn);
 
   const handleRun = () => {
     setSteps([]);
-    setError(null);
-
-    try {
-      // Mock function to capture loop steps
-      const animarCicloFor = (i, total) => {
-        setSteps(prev => [...prev, { i, total }]);
+    
+    runCode((addToQueue, updateUserState) => {
+      let iterationCount = 0;
+      return {
+        animarCicloFor: (i, total) => {
+            iterationCount++;
+            updateUserState({ iterations: iterationCount });
+            addToQueue(() => {
+                setSteps(prev => [...prev, { i, total }]);
+            });
+        },
+        console: { log: () => {} }
       };
-
-      // Mock console.log
-      const console = { log: () => {} };
-
-      // Execute user code
-      const runUserCode = new Function('animarCicloFor', 'console', `
-        try {
-          ${code}
-        } catch (e) {
-          throw e;
-        }
-      `);
-
-      runUserCode(animarCicloFor, console);
-    } catch (err) {
-      setError(err.message);
-    }
+    });
   };
 
-  const handleReset = () => {
-    setCode(defaultCode);
+  const handleResetWrapper = () => {
     setSteps([]);
-    setError(null);
+    reset();
   };
 
   return (
@@ -105,22 +116,6 @@ const ForLoop = () => {
         <div className="flex flex-col bg-[#1e1e1e] rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
           <div className="flex items-center justify-between px-4 py-3 bg-[#252526] border-b border-slate-700">
             <span className="text-slate-300 font-medium text-sm">Editor de Código</span>
-            <div className="flex gap-2">
-              <button 
-                onClick={handleReset}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition-colors"
-                title="Restablecer código"
-              >
-                <RotateCcw size={16} />
-              </button>
-              <button 
-                onClick={handleRun}
-                className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-md transition-colors"
-              >
-                <Play size={16} />
-                Ejecutar
-              </button>
-            </div>
           </div>
           
           <div className="flex-1 overflow-auto custom-scrollbar relative">
@@ -138,11 +133,20 @@ const ForLoop = () => {
               }}
             />
           </div>
-          {error && (
-            <div className="p-4 bg-red-900/20 border-t border-red-900/50 text-red-400 text-sm font-mono">
-              Error: {error}
-            </div>
-          )}
+          
+          {/* Controls Area */}
+          <div className="p-4 bg-[#252526] border-t border-slate-700">
+             <ExecutionControls 
+                onRun={handleRun}
+                onReset={handleResetWrapper}
+                onStep={nextStep}
+                isDebugMode={isDebugMode}
+                setIsDebugMode={setIsDebugMode}
+                isPlaying={isPlaying}
+                canStep={currentStepIndex < totalSteps}
+                isFinished={currentStepIndex >= totalSteps && totalSteps > 0}
+             />
+          </div>
         </div>
 
         {/* Visualization Column */}
@@ -151,14 +155,14 @@ const ForLoop = () => {
             <span className="text-slate-300 font-medium text-sm">Pista de Iteraciones</span>
           </div>
           
-          <div className="flex-1 p-6 bg-secondary/50 relative overflow-auto">
+          <div className="flex-1 p-6 bg-secondary/50 relative overflow-auto flex flex-col">
             {steps.length === 0 ? (
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-600">
+              <div className="flex-1 flex flex-col items-center justify-center text-slate-600">
                 <Repeat size={48} className="mb-4 opacity-20" />
                 <p>Ejecuta el ciclo para ver los pasos</p>
               </div>
             ) : (
-              <div className="flex flex-wrap gap-4 items-center justify-start content-start">
+              <div className="flex flex-wrap gap-4 items-center justify-start content-start mb-8">
                 {steps.map((step, index) => {
                   const isLast = index === steps.length - 1;
                   return (
@@ -188,6 +192,7 @@ const ForLoop = () => {
                 })}
               </div>
             )}
+            <Feedback result={feedback} error={error} />
           </div>
         </div>
       </div>

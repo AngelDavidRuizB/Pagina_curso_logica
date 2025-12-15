@@ -1,13 +1,26 @@
 import React, { memo } from 'react';
 import { Handle, Position } from 'reactflow';
+import { Play, Square, FileText, GitBranch, Check, X, ArrowRight } from 'lucide-react';
 
-const NodeBase = "px-4 py-3 shadow-lg text-sm font-medium text-center min-w-[150px] flex items-center justify-center transition-transform hover:scale-105 duration-200";
+const NodeBase = "px-4 py-3 shadow-xl text-sm font-medium text-center min-w-[160px] flex items-center justify-center transition-all hover:scale-105 duration-300 hover:shadow-2xl";
 
 export const StartEndNode = memo(({ data }) => {
+  if (data.isMerge) {
+    return (
+      <div className="w-4 h-4 rounded-full bg-slate-400 flex items-center justify-center shadow-sm border-2 border-white">
+        <Handle type="target" position={Position.Top} className="!bg-transparent !border-none !w-full !h-full !top-0" />
+        <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-none !w-full !h-full !bottom-0" />
+      </div>
+    );
+  }
+  const isStart = data.label === 'INICIO';
   return (
-    <div className={`${NodeBase} rounded-full bg-gradient-to-r from-primary to-blue-600 text-white border-2 border-primary`}>
+    <div className={`${NodeBase} rounded-full ${isStart ? 'bg-gradient-to-r from-emerald-500 to-teal-600' : 'bg-gradient-to-r from-rose-500 to-pink-600'} text-white border-2 border-white ring-2 ${isStart ? 'ring-emerald-200' : 'ring-rose-200'}`}>
       <Handle type="target" position={Position.Top} className="!bg-transparent !border-none" />
-      <span className="font-bold tracking-wide">{data.label}</span>
+      <div className="flex items-center gap-2">
+        {isStart ? <Play size={16} fill="currentColor" /> : <Square size={16} fill="currentColor" />}
+        <span className="font-bold tracking-wide uppercase">{data.label}</span>
+      </div>
       <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-none" />
     </div>
   );
@@ -15,65 +28,78 @@ export const StartEndNode = memo(({ data }) => {
 
 export const ProcessNode = memo(({ data }) => {
   return (
-    <div className={`${NodeBase} bg-white border border-slate-200 rounded-lg text-slate-700`}>
-      <Handle type="target" position={Position.Top} className="!bg-slate-400 !w-3 !h-3" />
-      <div className="font-mono text-xs">{data.label}</div>
-      <Handle type="source" position={Position.Bottom} className="!bg-slate-400 !w-3 !h-3" />
+    <div className={`${NodeBase} bg-white border-l-4 border-l-blue-500 border-y border-r border-slate-200 rounded-r-lg text-slate-700`}>
+      <Handle type="target" position={Position.Top} className="!bg-blue-400 !w-3 !h-3" />
+      <div className="flex items-center gap-2">
+        <div className="p-1.5 bg-blue-50 rounded text-blue-600">
+            <ArrowRight size={14} />
+        </div>
+        <div className="font-mono text-xs font-semibold">{data.label}</div>
+      </div>
+      <Handle type="source" position={Position.Bottom} className="!bg-blue-400 !w-3 !h-3" />
     </div>
   );
 });
 
 export const IONode = memo(({ data }) => {
   return (
-    <div className="relative group">
+    <div className="relative group py-2">
       <div 
-        className={`${NodeBase} bg-amber-50 border border-amber-200 text-amber-900`} 
-        style={{ transform: 'skewX(-20deg)', borderRadius: '4px' }}
+        className={`${NodeBase} bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-300 text-amber-900 shadow-amber-100`} 
+        style={{ transform: 'skewX(-15deg)', borderRadius: '6px' }}
       >
-        <div style={{ transform: 'skewX(20deg)' }} className="font-mono text-xs">
-          {data.label}
+        <div style={{ transform: 'skewX(15deg)' }} className="flex items-center gap-2 justify-center w-full">
+          <FileText size={14} className="text-amber-600" />
+          <div className="font-mono text-xs font-bold">
+            {data.label}
+          </div>
         </div>
       </div>
-      <Handle type="target" position={Position.Top} className="!bg-amber-400 !w-3 !h-3" />
-      <Handle type="source" position={Position.Bottom} className="!bg-amber-400 !w-3 !h-3" />
+      <Handle type="target" position={Position.Top} className="!bg-amber-500 !w-3 !h-3" />
+      <Handle type="source" position={Position.Bottom} className="!bg-amber-500 !w-3 !h-3" />
     </div>
   );
 });
 
 export const DecisionNode = memo(({ data }) => {
   return (
-    <div className="relative w-[140px] h-[100px] flex items-center justify-center group">
+    <div className="relative w-[180px] h-[120px] flex items-center justify-center group">
       {/* Diamond Shape */}
       <div 
-        className="absolute inset-0 bg-indigo-50 border-2 border-indigo-200 shadow-md transition-colors group-hover:border-indigo-400"
-        style={{ transform: 'rotate(45deg) scale(0.7)', borderRadius: '8px' }}
+        className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-violet-600 shadow-lg shadow-indigo-200 transition-transform group-hover:scale-105 duration-300"
+        style={{ transform: 'rotate(45deg) scale(0.65)', borderRadius: '12px', border: '3px solid white' }}
       >
       </div>
       
       {/* Content */}
-      <div className="relative z-10 text-indigo-900 font-bold text-xs px-2 text-center max-w-[100px] leading-tight">
-        {data.label}
+      <div className="relative z-10 text-white font-bold text-xs px-4 text-center max-w-[120px] leading-tight drop-shadow-md flex flex-col items-center gap-1">
+        <GitBranch size={16} className="text-indigo-100" />
+        <span>{data.label}</span>
       </div>
       
-      <Handle type="target" position={Position.Top} className="!bg-indigo-500 !w-3 !h-3 -mt-2" />
+      <Handle type="target" position={Position.Top} className="!bg-indigo-600 !w-4 !h-4 !border-2 !border-white -mt-2" />
       
       {/* Salida True (Derecha) */}
       <Handle 
         type="source" 
         position={Position.Right} 
         id="true"
-        className="!bg-emerald-500 !w-3 !h-3 -mr-2" 
+        className="!bg-emerald-500 !w-4 !h-4 !border-2 !border-white -mr-3" 
       />
-      <div className="absolute -right-10 top-1/2 -translate-y-1/2 text-[10px] font-bold text-emerald-600 bg-white/80 px-1.5 py-0.5 rounded border border-emerald-100 shadow-sm">SÍ</div>
+      <div className="absolute -right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-200 shadow-sm">
+        <Check size={10} /> SÍ
+      </div>
 
       {/* Salida False (Izquierda) */}
       <Handle 
         type="source" 
         position={Position.Left} 
         id="false"
-        className="!bg-rose-500 !w-3 !h-3 -ml-2" 
+        className="!bg-rose-500 !w-4 !h-4 !border-2 !border-white -ml-3" 
       />
-      <div className="absolute -left-10 top-1/2 -translate-y-1/2 text-[10px] font-bold text-rose-600 bg-white/80 px-1.5 py-0.5 rounded border border-rose-100 shadow-sm">NO</div>
+      <div className="absolute -left-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-1 rounded-full border border-rose-200 shadow-sm">
+        <X size={10} /> NO
+      </div>
     </div>
   );
 });

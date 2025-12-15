@@ -10,6 +10,7 @@ import NestedLoops from './sections/NestedLoops';
 import Arrays from './sections/Arrays';
 import Functions from './sections/Functions';
 import DiagramExplanation from './sections/DiagramExplanation';
+import EducationalMaterial from './sections/EducationalMaterial';
 
 function App() {
   const [activeSection, setActiveSection] = useState('inicio');
@@ -18,6 +19,8 @@ function App() {
     switch (activeSection) {
       case 'inicio':
         return <Home onNavigate={setActiveSection} />;
+      case 'material':
+        return <EducationalMaterial />;
       case 'diagrama':
         return <DiagramGenerator />;
       case 'variables':

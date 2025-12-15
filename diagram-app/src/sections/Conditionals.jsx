@@ -3,7 +3,9 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { Play, RotateCcw, Split } from 'lucide-react';
+import { Split } from 'lucide-react';
+import { useExecutionEngine } from '../hooks/useExecutionEngine';
+import { ExecutionControls, Feedback } from '../components/ExecutionControls';
 
 const defaultCode = `// 1. Define una condición
 let edad = 18;
@@ -18,45 +20,52 @@ if (edad >= 18) {
 }`;
 
 const Conditionals = () => {
-  const [code, setCode] = useState(defaultCode);
   const [executionStep, setExecutionStep] = useState(null); // null, 'true', 'false'
   const [conditionText, setConditionText] = useState("Condición");
-  const [error, setError] = useState(null);
+
+  const validationFn = (state) => {
+      if (state.lastCondition !== undefined) {
+          return { success: true, message: "¡Bien hecho! Has evaluado una condición correctamente." };
+      }
+      return { success: false, message: "Intenta ejecutar una condición usando animarCondicional." };
+  };
+
+  const { 
+    code, 
+    setCode, 
+    runCode, 
+    reset, 
+    nextStep, 
+    isDebugMode, 
+    setIsDebugMode, 
+    isPlaying, 
+    currentStepIndex, 
+    totalSteps,
+    error, 
+    feedback 
+  } = useExecutionEngine(defaultCode, validationFn);
 
   const handleRun = () => {
     setExecutionStep(null);
-    setError(null);
-
-    try {
-      // Mock function to capture conditional logic
-      const animarCondicional = (condicion, texto) => {
-        setConditionText(texto || "Condición");
-        setExecutionStep(condicion ? 'true' : 'false');
+    
+    runCode((addToQueue, updateUserState) => {
+      return {
+        animarCondicional: (condicion, texto) => {
+            updateUserState({ lastCondition: condicion });
+            addToQueue(() => {
+                setConditionText(texto || "Condición");
+                setExecutionStep(condicion ? 'true' : 'false');
+            });
+        },
+        console: { log: () => {} }
       };
-
-      // Mock console.log to avoid errors if user uses it
-      const console = { log: () => {} };
-
-      // Execute user code
-      const runUserCode = new Function('animarCondicional', 'console', `
-        try {
-          ${code}
-        } catch (e) {
-          throw e;
-        }
-      `);
-
-      runUserCode(animarCondicional, console);
-    } catch (err) {
-      setError(err.message);
-    }
+    });
   };
 
-  const handleReset = () => {
-    setCode(defaultCode);
+  const handleResetWrapper = () => {
     setExecutionStep(null);
     setConditionText("Condición");
-    setError(null);
+    reset();
   };
 
   return (
@@ -121,22 +130,6 @@ const Conditionals = () => {
         <div className="flex flex-col bg-[#1e1e1e] rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
           <div className="flex items-center justify-between px-4 py-3 bg-[#252526] border-b border-slate-700">
             <span className="text-slate-300 font-medium text-sm">Editor de Código</span>
-            <div className="flex gap-2">
-              <button 
-                onClick={handleReset}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition-colors"
-                title="Restablecer código"
-              >
-                <RotateCcw size={16} />
-              </button>
-              <button 
-                onClick={handleRun}
-                className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-md transition-colors"
-              >
-                <Play size={16} />
-                Ejecutar
-              </button>
-            </div>
           </div>
           
           <div className="flex-1 overflow-auto custom-scrollbar relative">
@@ -154,11 +147,20 @@ const Conditionals = () => {
               }}
             />
           </div>
-          {error && (
-            <div className="p-4 bg-red-900/20 border-t border-red-900/50 text-red-400 text-sm font-mono">
-              Error: {error}
-            </div>
-          )}
+          
+          {/* Controls Area */}
+          <div className="p-4 bg-[#252526] border-t border-slate-700">
+             <ExecutionControls 
+                onRun={handleRun}
+                onReset={handleResetWrapper}
+                onStep={nextStep}
+                isDebugMode={isDebugMode}
+                setIsDebugMode={setIsDebugMode}
+                isPlaying={isPlaying}
+                canStep={currentStepIndex < totalSteps}
+                isFinished={currentStepIndex >= totalSteps && totalSteps > 0}
+             />
+          </div>
         </div>
 
         {/* Visualization Column */}
@@ -167,7 +169,7 @@ const Conditionals = () => {
             <span className="text-slate-300 font-medium text-sm">Flujo del Programa</span>
           </div>
           
-          <div className="flex-1 p-6 bg-secondary/50 relative overflow-auto flex items-center justify-center">
+          <div className="flex-1 p-6 bg-secondary/50 relative overflow-auto flex flex-col items-center justify-center">
             {!executionStep ? (
               <div className="flex flex-col items-center justify-center text-slate-600">
                 <Split size={48} className="mb-4 opacity-20" />
@@ -237,6 +239,7 @@ const Conditionals = () => {
                 </div>
               </div>
             )}
+            <Feedback result={feedback} error={error} />
           </div>
         </div>
       </div>

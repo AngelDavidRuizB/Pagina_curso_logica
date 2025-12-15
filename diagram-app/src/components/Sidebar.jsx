@@ -10,7 +10,8 @@ import {
   Grid, 
   FunctionSquare, 
   BookOpen, 
-  Network 
+  Network,
+  Youtube
 } from 'lucide-react';
 
 const menuItems = [
@@ -24,6 +25,7 @@ const menuItems = [
   { id: 'funciones', label: '7. Funciones', icon: FunctionSquare },
   { id: 'explicacion-diagramas', label: '8. Explicación Diagramas', icon: BookOpen },
   { id: 'diagrama', label: '9. Generar diagrama', icon: Network },
+  { id: 'material', label: 'Material Didáctico', icon: Youtube },
 ];
 
 const Sidebar = ({ activeSection, onNavigate }) => {

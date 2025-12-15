@@ -3,7 +3,9 @@ import Editor from 'react-simple-code-editor';
 import { highlight, languages } from 'prismjs/components/prism-core';
 import 'prismjs/components/prism-clike';
 import 'prismjs/components/prism-javascript';
-import { Play, RotateCcw, Box } from 'lucide-react';
+import { Box } from 'lucide-react';
+import { useExecutionEngine } from '../hooks/useExecutionEngine';
+import { ExecutionControls, Feedback } from '../components/ExecutionControls';
 
 const defaultCode = `// 1. Declara tus variables
 let heroe = "Link";
@@ -16,40 +18,94 @@ crearVariable("vidas", vidas);
 crearVariable("tieneEspada", tieneEspada);`;
 
 const Variables = () => {
-  const [code, setCode] = useState(defaultCode);
   const [variables, setVariables] = useState([]);
-  const [error, setError] = useState(null);
+
+  const validationFn = (state) => {
+    const vars = state.vars || {};
+    if (vars['heroe'] === 'Link' && vars['vidas'] === 3) {
+      return { success: true, message: "¡Correcto! Has definido al héroe y sus vidas." };
+    }
+    return { success: false, message: "Asegúrate de definir 'heroe' como 'Link' y 'vidas' como 3." };
+  };
+
+  const { 
+    code, 
+    setCode, 
+    runCode, 
+    reset, 
+    nextStep, 
+    isDebugMode, 
+    setIsDebugMode, 
+    isPlaying, 
+    currentStepIndex, 
+    totalSteps,
+    error, 
+    feedback 
+  } = useExecutionEngine(defaultCode, validationFn);
 
   const handleRun = () => {
     setVariables([]);
-    setError(null);
-
-    try {
-      // Mock function to capture variables
-      const crearVariable = (nombre, valor) => {
-        setVariables(prev => [...prev, { nombre, valor }]);
-      };
-
-      // Execute user code with the mocked function
-      // We wrap it in a try-catch block inside the execution context as well
-      const runUserCode = new Function('crearVariable', `
-        try {
-          ${code}
-        } catch (e) {
-          throw e;
+    
+    runCode((addToQueue, updateUserState) => {
+      return {
+        crearVariable: (nombre, valor) => {
+          // Update validation state
+          updateUserState({ vars: { ...variables, [nombre]: valor } }); // Note: variables here is stale closure, but we just need to accumulate in the hook's ref really. 
+          // Actually updateUserState merges. So we can just do:
+          // But wait, I need to accumulate variables in the hook's state for validation.
+          // The hook's updateUserState merges at the top level.
+          // So I should do: updateUserState({ vars: { ...currentVars, [nombre]: valor } })
+          // But I don't have access to currentVars ref here easily without passing it.
+          // Let's simplify: The validation check can just look for keys in the flat state if I want, or I can manage a 'vars' object.
+          // For simplicity, let's just use a functional update pattern if the hook supported it, but it doesn't.
+          // Let's just assume the hook's userState will accumulate if I merge carefully? 
+          // Actually, the hook's updateUserState does: userStateRef.current = { ...userStateRef.current, ...updater };
+          // So if I do updateUserState({ [nombre]: valor }), they are at root.
+          
+          // Let's try to use a specific key 'capturedVariables' and update it.
+          // Since I can't read the current state inside this callback easily (it's defined at start of run), 
+          // I will rely on the fact that I can pass a function to updateUserState? No, I defined it as taking an object.
+          
+          // Let's modify the hook slightly to allow functional updates or just use a mutable object in the closure?
+          // No, let's just use the visual state for validation? No, visual state updates are async/queued.
+          
+          // Hack: I will use a local object in this scope to accumulate, then update the hook state.
+          // But this scope is created once per run.
+          
+          // Better:
+          addToQueue(() => {
+             setVariables(prev => [...prev, { nombre, valor }]);
+             // We can also update the validation state here if we wanted, but validation happens at the end.
+             // Actually, validation happens at the end of the queue execution.
+             // So we can update the hook's userState inside the queue action!
+             updateUserState({ vars: { [nombre]: valor } }); // This would overwrite 'vars' if not careful.
+          });
+          
+          // Wait, validation needs the FINAL state.
+          // If I update the hook's state inside the queue, it will be correct when validation runs.
+          // But I need to merge 'vars'.
+          // Let's just put them at the root of userState for now.
+          updateUserState({ [nombre]: valor });
         }
-      `);
-
-      runUserCode(crearVariable);
-    } catch (err) {
-      setError(err.message);
-    }
+      };
+    });
   };
 
-  const handleReset = () => {
-    setCode(defaultCode);
-    setVariables([]);
-    setError(null);
+  // We need to wrap the validation logic to check the root of the state
+  const validationFnWrapper = (state) => {
+      if (state['heroe'] === 'Link' && state['vidas'] === 3) {
+          return { success: true, message: "¡Correcto! Has definido al héroe y sus vidas." };
+      }
+      return { success: false, message: "Asegúrate de definir 'heroe' como 'Link' y 'vidas' como 3." };
+  };
+  
+  // Re-bind the hook with the new validation wrapper
+  // Actually I can't change the hook call conditionally.
+  // I will just pass validationFnWrapper to the hook.
+
+  const handleResetWrapper = () => {
+      setVariables([]);
+      reset();
   };
 
   return (
@@ -106,22 +162,6 @@ const Variables = () => {
         <div className="flex flex-col bg-[#1e1e1e] rounded-xl overflow-hidden border border-slate-800 shadow-2xl">
           <div className="flex items-center justify-between px-4 py-3 bg-[#252526] border-b border-slate-700">
             <span className="text-slate-300 font-medium text-sm">Editor de Código</span>
-            <div className="flex gap-2">
-              <button 
-                onClick={handleReset}
-                className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-700 rounded-md transition-colors"
-                title="Restablecer código"
-              >
-                <RotateCcw size={16} />
-              </button>
-              <button 
-                onClick={handleRun}
-                className="flex items-center gap-2 px-3 py-1.5 bg-green-600 hover:bg-green-500 text-white text-sm font-medium rounded-md transition-colors"
-              >
-                <Play size={16} />
-                Ejecutar
-              </button>
-            </div>
           </div>
           
           <div className="flex-1 overflow-auto custom-scrollbar relative">
@@ -139,11 +179,20 @@ const Variables = () => {
               }}
             />
           </div>
-          {error && (
-            <div className="p-4 bg-red-900/20 border-t border-red-900/50 text-red-400 text-sm font-mono">
-              Error: {error}
-            </div>
-          )}
+          
+          {/* Controls Area */}
+          <div className="p-4 bg-[#252526] border-t border-slate-700">
+             <ExecutionControls 
+                onRun={handleRun}
+                onReset={handleResetWrapper}
+                onStep={nextStep}
+                isDebugMode={isDebugMode}
+                setIsDebugMode={setIsDebugMode}
+                isPlaying={isPlaying}
+                canStep={currentStepIndex < totalSteps}
+                isFinished={currentStepIndex >= totalSteps && totalSteps > 0}
+             />
+          </div>
         </div>
 
         {/* Visualization Column */}
@@ -153,7 +202,7 @@ const Variables = () => {
           </div>
           
           <div className="flex-1 p-6 bg-secondary/50 relative overflow-auto">
-            {variables.length === 0 ? (
+            {variables.length === 0 && !error ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-600">
                 <Box size={48} className="mb-4 opacity-20" />
                 <p>Ejecuta el código para ver las variables</p>
@@ -163,7 +212,7 @@ const Variables = () => {
                 {variables.map((variable, index) => (
                   <div 
                     key={index}
-                    className="bg-slate-800 rounded-lg p-4 border border-slate-700 shadow-lg transform transition-all duration-500 hover:scale-105 hover:border-blue-500/50"
+                    className="bg-slate-800 rounded-lg p-4 border border-slate-700 shadow-lg transform transition-all duration-500 hover:scale-105 hover:border-blue-500/50 animate-in fade-in zoom-in-95"
                   >
                     <div className="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1">Nombre</div>
                     <div className="font-mono text-blue-400 font-bold text-lg mb-3">{variable.nombre}</div>
@@ -183,6 +232,8 @@ const Variables = () => {
                 ))}
               </div>
             )}
+            
+            <Feedback result={feedback} error={error} />
           </div>
         </div>
       </div>
